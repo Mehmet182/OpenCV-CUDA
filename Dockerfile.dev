@@ -1,7 +1,5 @@
-# Elindeki image’i base olarak kullanıyoruz
 FROM m1l0/opencv:4.5.5-cuda11.8.0-cudnn8-python3.11.8-ubuntu22.04
 
-# Sistem paketlerini kur
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
@@ -12,27 +10,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-libgpiod \
     ffmpeg \
     openssl \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
-
-# SSL sertifikası oluştur
-RUN mkdir -p /etc/ssl/private && \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    mkdir -p /etc/ssl/private && \
     openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 \
-    -keyout /etc/ssl/private/key.pem \
-    -out /etc/ssl/private/cert.pem \
-    -subj "/C=TR/ST=KOCAELI/O=NovaVision AI/CN=novavision.ai"
+      -keyout /etc/ssl/private/key.pem \
+      -out /etc/ssl/private/cert.pem \
+      -subj "/C=TR/ST=KOCAELI/O=NovaVision AI/CN=novavision.ai"
 
-# Proje dizinine geç
 WORKDIR /opt/project
-
-# Kaynak kodları container içine kopyala
 COPY . /opt/project
 
-# Python bağımlılıklarını kur
 RUN pip install --no-cache-dir -r requirements.prod
 
-# Entrypoint scriptine çalıştırma izni ver
-RUN chmod +x /opt/project/entrypoint.sh
-
-# Container çalıştığında otomatik bu script çalışacak
+RUN ["chmod", "+x", "/opt/project/entrypoint.sh"]
 ENTRYPOINT ["/bin/bash", "/opt/project/entrypoint.sh"]
