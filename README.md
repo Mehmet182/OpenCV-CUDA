@@ -77,3 +77,7 @@ Write that command template for run python app in exec or terminal: "python {pat
 ```console
 python capsules/capsule/apps/client.py
 ```
+
+
+This project uses the [m1l0/opencv](https://hub.docker.com/r/m1l0/opencv) Docker image as a base.
+The base image is licensed under the MIT License (c) 2023 Chee Yeo.
