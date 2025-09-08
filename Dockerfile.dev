@@ -20,7 +20,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /opt/project
 COPY . /opt/project
 
-RUN pip install --no-cache-dir -r requirements.prod
+# Development requirements
+RUN pip install --no-cache-dir -r requirements.dev
 
 RUN ["chmod", "+x", "/opt/project/entrypoint.sh"]
+
 ENTRYPOINT ["/bin/bash", "/opt/project/entrypoint.sh"]
+
+# Varsayılan olarak Jupyter Notebook başlat
+CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--no-browser", "--allow-root"]
